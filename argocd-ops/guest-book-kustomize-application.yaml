@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-guestbook-app
+  # You'll usually want to add your resources to the argocd namespace.
+  namespace: ifs-argocd
+spec:
+  project: default
+  
+  # Sources field specifies the list of sources for the application
+  source:
+    path: kustomize-guestbook
+    repoURL: https://github.com/mak-xoriant/argocd-example-apps.git
+    targetRevision: master
+    kustomize:
+      namePrefix: staging-
+      commonLabels:
+        app: argocd-demo  
+  # Destination cluster and namespace to deploy the application
+  destination:
+    namespace: kustomize-guestbook
+    # cluster API URL
+    server: https://kubernetes.default.svc
+    
+  # Sync policy
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

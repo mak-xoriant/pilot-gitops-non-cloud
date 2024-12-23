@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: deploy-directory-guestbook
+  # You'll usually want to add your resources to the argocd namespace.
+  namespace: ifs-argocd
+spec:
+  project: default
+  
+  # Sources field specifies the list of sources for the application
+  source:
+    path: deploy
+    repoURL: https://github.com/mak-xoriant/k8s-native-app-gitops-managed.git
+    targetRevision: main
+    directory:
+      recurse: true
+  
+  # Destination cluster and namespace to deploy the application
+  destination:
+    namespace: deploy-directory-guestbook
+    # cluster API URL
+    server: https://kubernetes.default.svc
+  
+  # Sync policy
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
